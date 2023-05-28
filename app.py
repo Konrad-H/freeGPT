@@ -27,7 +27,7 @@ intents.typing = False
 intents.presences = False
 client = commands.Bot(command_prefix="", intents=intents)  # Empty prefix
 
-assistant = ChatAssistant(OPENAI_API_KEY)
+assistant = ChatAssistant(OPENAI_API_KEY, input_prompt=INPUT_PROMPT)
 
 
 @client.event
