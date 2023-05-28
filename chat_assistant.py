@@ -1,10 +1,9 @@
 import openai
-
+import time 
 # TODO LIST:
 # - Restart chat if client asks to end
 # - Let free-petto roam google/bing for answers
 # - 
-# - Add simple Restart functionality so the main app can restart when needed
 # - Add 
   
 
@@ -13,10 +12,31 @@ class ChatAssistant:
         self.api_key = api_key
         self.model = model
         self.input_prompt = input_prompt
-        self.conversation_history = [{"role": "system", "content": input_prompt}]
+        self.conversation_history = []
+        self.restart_conversation()
+        self.last_time = time.time() # time in seconds
+        self.history_time_window = 30*60 # time in seconds
         openai.api_key = api_key
 
+
+    def restart_conversation(self):
+        self.conversation_history = [{"role": "system", "content": self.input_prompt}]
+    
+    def check_time(self):
+        new_time = time.time()
+        if new_time-self.last_time> self.history_time_window:
+            self.restart_conversation()
+
+        self.last_time = new_time       
+
     async def generate_chat_response(self, input_text):
+
+        new_time = time.time()
+        if new_time-self.last_time> self.history_time_window:
+            self.restart_conversation()
+
+        self.last_time = new_time
+
         conversation = self.conversation_history + [{"role": "user", "content": input_text}]
 
         response = openai.ChatCompletion.create(
