@@ -29,7 +29,7 @@ class ChatAssistant:
 
         self.last_time = new_time       
 
-    async def generate_chat_response(self, input_text):
+    async def generate_chat_response(self, message):
 
         new_time = time.time()
         if new_time-self.last_time> self.history_time_window:
@@ -37,7 +37,7 @@ class ChatAssistant:
 
         self.last_time = new_time
 
-        conversation = self.conversation_history + [{"role": "user", "content": input_text}]
+        conversation = self.conversation_history + [{"role": "user", "content": message.content}]
 
         response = openai.ChatCompletion.create(
             model=self.model,
@@ -46,7 +46,7 @@ class ChatAssistant:
 
         response_text = response.choices[0].message.content.strip()
         self.conversation_history.extend([
-            {"role": "user", "content": input_text},
+            {"role": "user", "content": message.content},
             {"role": "assistant", "content": response_text},
         ])
 

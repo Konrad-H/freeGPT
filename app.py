@@ -32,6 +32,7 @@ assistant = ChatAssistant(OPENAI_API_KEY, input_prompt=INPUT_PROMPT)
 @client.event
 async def on_ready():
     print(f"We have logged in as {client.user}")
+    
 
 @client.event
 async def on_message(message):
@@ -39,7 +40,7 @@ async def on_message(message):
     if message.author == client.user:
         return
     print("MESSAGE SENT")
-    response_text = await assistant.generate_chat_response(message.content)
+    response_text = await assistant.generate_chat_response(message)
     await message.channel.send(response_text)
 
 def run_discord_bot():
