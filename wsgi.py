@@ -1,6 +1,12 @@
 from flask import Flask
-from threading import Thread
+# from threading import Thread
 from app import run_discord_bot
+
+run_discord_bot()
+
+# bot_thread = Thread(target=run_discord_bot)
+# bot_thread.start()
+
 
 app = Flask(__name__)
 
@@ -11,7 +17,5 @@ def hello():
 
 if __name__ == '__main__':
 
-    bot_thread = Thread(target=run_discord_bot)
-    bot_thread.start()
 
     app.run()

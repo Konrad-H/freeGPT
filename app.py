@@ -44,4 +44,5 @@ async def on_message(message):
     await message.channel.send(response_text)
 
 def run_discord_bot():
+    print("Bot ready to start")
     client.run(DISCORD_TOKEN)
