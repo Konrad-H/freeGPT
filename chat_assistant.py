@@ -12,32 +12,41 @@ class ChatAssistant:
         self.api_key = api_key
         self.model = model
         self.input_prompt = input_prompt
-        self.conversation_history = []
-        self.restart_conversation()
-        self.last_time = time.time() # time in seconds
+        self.chat_histories = {}
+        self.last_time = {} # time in seconds
         self.history_time_window = 30*60 # time in seconds
         openai.api_key = api_key
 
+    def get_unique_key(self, message):
+        return f"{message.guild.id}_{message.channel.id}_{message.author.id}"
 
-    def restart_conversation(self):
-        self.conversation_history = [{"role": "system", "content": self.input_prompt}]
-    
-    def check_time(self):
+    def get_conversation_history(self, key):
+        return self.chat_histories.get(key, [])
+
+    def set_conversation_history(self, key, history):
+        self.chat_histories[key] = history
+
+    def restart_conversation(self, key):
+        self.chat_histories[key] = [{"role": "system", "content": self.input_prompt}]
+
+    def check_time_and_reset(self, key):
         new_time = time.time()
-        if new_time-self.last_time> self.history_time_window:
-            self.restart_conversation()
 
-        self.last_time = new_time       
+        if key not in self.last_time:
+            self.last_time[key] = new_time
+            return new_time
+ 
+        elif new_time - self.last_time[key] > self.history_time_window:
+            self.restart_conversation(key)
+            return new_time
 
     async def generate_chat_response(self, message):
 
-        new_time = time.time()
-        if new_time-self.last_time> self.history_time_window:
-            self.restart_conversation()
+        unique_key = self.get_unique_key(message)
+        self.check_time_and_reset(unique_key)
+        conversation_history = self.get_conversation_history(unique_key)
 
-        self.last_time = new_time
-
-        conversation = self.conversation_history + [{"role": "user", "content": message.content}]
+        conversation = conversation_history + [{"role": "user", "content": message.content}]
 
         response = openai.ChatCompletion.create(
             model=self.model,
@@ -45,12 +54,11 @@ class ChatAssistant:
         )
 
         response_text = response.choices[0].message.content.strip()
-        self.conversation_history.extend([
+        conversation_history.extend([
             {"role": "user", "content": message.content},
             {"role": "assistant", "content": response_text},
         ])
 
-        return response_text
+        self.set_conversation_history(unique_key, conversation_history)
 
-    def reset_conversation(self):
-        self.conversation_history = [{"role": "system", "content": "You are a helpful assistant."}]
+        return response_text
