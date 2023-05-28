@@ -1,5 +1,4 @@
 import os
-
 import discord
 from discord.ext import commands
 
@@ -46,3 +45,8 @@ async def on_message(message):
 def run_discord_bot():
     print("Bot ready to start")
     client.run(DISCORD_TOKEN)
+    
+
+if __name__ == '__main__':
+
+    run_discord_bot()
