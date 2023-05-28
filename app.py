@@ -1,13 +1,20 @@
+import os
 import discord
 from discord.ext import commands
 
 from chat_assistant import ChatAssistant
 
-with  open("discord.token") as f:
-    DISCORD_TOKEN = f.readline() # Replace this with your actual bot token
-with  open("openai.token") as f:
-    OPENAI_API_KEY = f.readline() # Replace this with your actual bot token
-print(DISCORD_TOKEN)
+
+
+try:
+    with  open("discord.token") as f:
+        DISCORD_TOKEN = f.readline() # Replace this with your actual bot token
+    with  open("openai.token") as f:
+        OPENAI_API_KEY = f.readline() # Replace this with your actual bot token
+    print("env variables found in folder")
+except:
+    DISCORD_TOKEN = os.environ.get("DISCORD_TOKEN")
+    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 INPUT_PROMPT = "You are Free-petto, a helpful assistant! Your name is (a play on the words GPT (the model that powers your) or Gepetto in italian, and free, because you are and will always be free)"
 
