@@ -1,4 +1,6 @@
 import os
+from threading import Thread
+
 import discord
 from discord.ext import commands
 
@@ -42,4 +44,8 @@ async def on_message(message):
     response_text = await assistant.generate_chat_response(message.content)
     await message.channel.send(response_text)
 
-client.run(DISCORD_TOKEN)
+def run_discord_bot():
+    client.run(DISCORD_TOKEN)
+
+bot_thread = Thread(target=run_discord_bot)
+bot_thread.start()
