@@ -7,7 +7,5 @@ RUN pip install -r requirements.txt
 
 COPY app.py .
 COPY ChatAssistant.py .
-COPY discord.token .
-COPY openai.token .
 
 CMD ["python", "app.py"]
