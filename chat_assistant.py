@@ -8,7 +8,7 @@ import time
   
 
 class ChatAssistant:
-    def __init__(self, api_key, input_prompt="You are a helpful assistant.", model="gpt-4"):
+    def __init__(self, api_key, input_prompt="You are a helpful assistant.", model="gpt-3.5-turbo"):
         self.api_key = api_key
         self.model = model
         self.input_prompt = input_prompt
