@@ -36,10 +36,9 @@ async def on_ready():
 @client.event
 async def on_message(message):
     print("MESSAGE RECIEVED")
-    print(message)
     if message.author == client.user:
         return
-
+    print("MESSAGE SENT")
     response_text = await assistant.generate_chat_response(message.content)
     await message.channel.send(response_text)
 
