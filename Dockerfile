@@ -6,6 +6,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY app.py .
-COPY ChatAssistant.py .
+COPY chat_assistant.py .
 
 CMD ["python", "app.py"]
