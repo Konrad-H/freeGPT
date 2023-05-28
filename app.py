@@ -46,7 +46,19 @@ def run_discord_bot():
     print("Bot ready to start")
     client.run(DISCORD_TOKEN)
     
+from flask import Flask, jsonify
+
+app = Flask(__name__)
+
+@app.route('/healthz', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
+
+def run_flask_app():
+    app.run(host="0.0.0.0", port=8080)
+
 
 if __name__ == '__main__':
-
+    from threading import Thread
+    Thread(target=run_flask_app).start()
     run_discord_bot()
